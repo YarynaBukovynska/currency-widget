@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Currency widget</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400&amp;subset=cyrillic" rel="stylesheet">
+  <script src="js/jquery-3.1.1.min.js"></script>
+  <style type="text/css" media="screen">
+      body {
+        font-family: 'Roboto Condensed', sans-serif;
+      }
+    .currency {
+      width: 220px;
+      height: 125px;
+      padding: 10px;
+      box-sizing: border-box;
+      background: url(img/currency-img.png) no-repeat 5% 80% #353535;
+      color: #fff;
+    }
+    .currency h4 {
+      font-size: 16px;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin: 0;
+    }
+    .currency table {
+      width: 150px;
+      margin-left: auto;
+      text-align: right;
+    }
+    .currency table tr td {
+      font-size: 16px;
+    }
+    .currency table tr:first-child td {
+      font-size: 11px;
+      color: #f3b100;
+    }
+    .currency table tr td:first-child {
+      font-weight: 600;
+    }
+    .currency table tr:last-child {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+<div class="currency">
+  <h4>Курси валют</h4>
+</div>
+<script type="text/javascript" async defer>
+    jQuery.ajax({
+    method: "GET",
+    url: "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5"
+    })
+    .done(function(data) {
+      var tbl = document.createElement('table');
+      var trh = document.createElement('tr');
+      var nameTd = ['','КУПIВЛЯ','ПРОДАЖ'];
+      for (var i = 0; i < nameTd.length; i++) {
+        var tdName = document.createElement('td');
+            tdName.innerHTML = nameTd[i];
+             trh.appendChild(tdName);
+      };
+
+      tbl.appendChild(trh);
+
+       var frag = document.createDocumentFragment();
+        data.forEach(function(item) {
+          var tr = document.createElement('tr');
+          var tdCcy = document.createElement('td');
+          var tdBuy = document.createElement('td');
+          var tdSale = document.createElement('td');
+          var resBuy = item.buy.slice(0, 5);
+          var resSale = item.sale.slice(0, 5);
+          tdCcy.innerHTML = item.ccy;
+          tdBuy.innerHTML = resBuy;
+          tdSale.innerHTML = resSale;
+          tr.appendChild(tdCcy);
+          tr.appendChild(tdBuy);
+          tr.appendChild(tdSale);
+          frag.appendChild(tr);
+    });
+
+    tbl.appendChild(frag);
+    document.querySelector('.currency').appendChild(tbl);
+    });
+</script>
+</body>
+</html>
+
+
